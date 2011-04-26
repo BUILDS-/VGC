@@ -16,6 +16,13 @@
  */
 
 /*
+ * Compile with:
+ * g++ -Wall -I/usr/X11R6/include -I/opt/local/include -L/opt/local/lib -L/usr/X11R6/lib -lglut -lglu -lgl -o main main.cpp
+ * From site:
+ * http://dirkraffel.com/2008/01/17/eclipse-cdt-on-mac-os-x/
+ */
+
+/*
  Gravity! Every some such frame (can't get global
  constants to work) gravity increases mia's downward
  velocity by one.
