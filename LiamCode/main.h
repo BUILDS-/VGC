@@ -1,16 +1,18 @@
 //C standard library
 //#include <stdlib.h>
 
-#include "Character.cpp"
+#ifndef __MAIN_H
+#define __MAIN_H
 
 //C++ standard library.
 #include <iostream>
-
+#include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include "level.h"
 
 //Imports fundamental constants and functions for GLUT and OpenGL
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 using namespace std;
 int lastFrameTime = 0;
 
@@ -28,3 +30,7 @@ bool spawn = false;
 bool keys [256];
 
 Character* mia;
+
+Level* level;
+
+#endif

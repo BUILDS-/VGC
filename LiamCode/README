@@ -1,0 +1,36 @@
+Basic Readme
+
+This is the template for a genaric side-scrolling video game.
+
+To compile, go into the build/ folder and type the commands:
+make clean
+make
+
+Then an executable called "main" should appear in the build folder. Run that.
+
+IF SOMETHING SHOULD FAIL AT THIS POINT, DON'T PANIC.
+Simply contact a VGC or Builds member familiar with cmake.
+
+Main.cpp: 
+This is the command flow for the code. Also where collision detection and
+gravity functions are, but those should be moved out pronto.
+
+Character.cpp:
+This is where a character (right now, THE character) functions are. This keeps
+track of where the character is and the actions it cand do (move, jump, etc).
+
+Level.cpp
+This is what stores what's in the level.
+
+
+Things to do:
+Bugs! Collision detection is wonky. One it needs be executed when the character
+is moving and not just when the player has his/her finger on an arrow key.
+
+Second, collision detection is inefficient. Someone should whittle it down to
+one function or a few smaller functions.
+
+Also, the code currently runs very slowly on Linux. Finding a fix for that if we
+want to work in openGL is a must.
+
+
