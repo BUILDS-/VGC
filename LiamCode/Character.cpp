@@ -77,7 +77,7 @@ int Character::getURX(void) {
 }
 
 int Character::getURY(void) {
-  return y;
+  return y + height;
 }
 
 int Character::getLRX(void) {
@@ -85,7 +85,7 @@ int Character::getLRX(void) {
 }
 
 int Character::getLRY(void) {
-  return y + height;
+  return y;
 }
 
 int Character::getULX(void) {
@@ -94,6 +94,14 @@ int Character::getULX(void) {
 
 int Character::getULY(void) {
   return y + height;
+}
+
+int Character::getLLX(void) {
+  return x;
+}
+
+int Character::getLLY(void) {
+  return y;
 }
 
 

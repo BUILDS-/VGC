@@ -32,6 +32,8 @@ public:
 	int getLRY(void);
 	int getULX(void);
 	int getULY(void);
+	int getLLX(void);
+	int getLLY(void);
 	void setCharacter(int,int);
 	void setX_V(int);
 	void setY_V(int);

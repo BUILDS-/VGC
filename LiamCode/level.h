@@ -7,7 +7,9 @@
 using namespace std;
 
 class Level {
+  //Array of Characters
   Character** people;
+  //number of characters in level
   int people_point;
 
 public:

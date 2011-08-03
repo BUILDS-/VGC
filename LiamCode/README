@@ -33,4 +33,8 @@ one function or a few smaller functions.
 Also, the code currently runs very slowly on Linux. Finding a fix for that if we
 want to work in openGL is a must.
 
+Make a coordinate system with (x,y) struct. Not seperate.
 
+level->People_point is a vague term. Make into number_of_people.
+
+REMEMBER, OPENGL HAS THE ORIGIN AT THE LOWER LEFT OF THE SCREEN
