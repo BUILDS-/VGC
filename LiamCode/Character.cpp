@@ -18,25 +18,34 @@ extern int SPEED;
 
 //Constructor
 Character::Character(void) {
-	x = 0;
-	y = 0;
-	x_v = 0;
-	y_v = 0;
-	SPEED = 1;
-	height = 20;
-	width = 20;
+  CPoint temp = {0,0};
+  location = temp;
+  x_v = 0;
+  y_v = 0;
+  SPEED = 1;
+  height = 20;
+  width = 20;
 }
 
 //Redundant, yes. Will fix later.
-Character::Character (int a, int b) {
-	printf("Harp de darp\n");
-	x = a;
-	y = b;
-	x_v = 0;
-	y_v = 0;
-	SPEED = 1;
-	height = 20;
-	width = 20;
+Character::Character (int x, int y) {
+  CPoint temp = {x,y};
+  location = temp;
+  x_v = 0;
+  y_v = 0;
+  SPEED = 1;
+  height = 20;
+  width = 20;
+}
+
+Character::Character (int x, int y, int p_height, int p_width) {
+  CPoint temp = {x,y};
+  location = temp;
+  x_v = 0;
+  y_v = 0;
+  SPEED = 1;
+  height = p_height;
+  width = p_width;
 }
 
 void Character::onGround(void) {
@@ -48,20 +57,13 @@ void Character::offGround(void) {
 }
 
 //Get functions.
-int Character::getX(void) {
-	return x;
-}
-
-int Character::getY(void) {
-	return y;
-}
 
 int Character::getX_V(void) {
-	return x_v;
+  return x_v;
 }
 
 int Character::getY_V(void) {
-	return y_v;
+  return y_v;
 }
 
 int Character::getHeight(void) {
@@ -72,43 +74,30 @@ int Character::getWidth(void) {
   return width;
 }
 
-int Character::getURX(void) {
-  return x + width;
+CPoint Character::getUR(void) {
+  CPoint temp = {location.x + width, location.y + height};
+  return temp;
 }
 
-int Character::getURY(void) {
-  return y + height;
+CPoint Character::getLR(void) {
+  CPoint temp = {location.x + width, location.y};
+  return temp;
 }
 
-int Character::getLRX(void) {
-  return x + width;
+CPoint Character::getUL(void) {
+  CPoint temp = {location.x, location.y + height};
+  return temp;
 }
 
-int Character::getLRY(void) {
-  return y;
+CPoint Character::getLL(void) {
+  CPoint temp = {location.x, location.y};
+  return temp;
 }
-
-int Character::getULX(void) {
-  return x;
-}
-
-int Character::getULY(void) {
-  return y + height;
-}
-
-int Character::getLLX(void) {
-  return x;
-}
-
-int Character::getLLY(void) {
-  return y;
-}
-
 
 //Set new position.
 void Character::setCharacter(int a, int b){
-	x = a;
-	y = b;
+	location.x = a;
+	location.y = b;
 	printf("%d %d\n", a, b);
 }
 
@@ -139,9 +128,9 @@ void Character::setY_V(int neoY_V) {
 
 //Updates location based on velocity
 void Character::move(void) {
-	x += x_v;
-	if(y > 40 || y_v > 0) {
-		y += y_v;
+	location.x += x_v;
+	if(location.y > 40 || y_v > 0) {
+		location.y += y_v;
 	} else {
 		y_v = 0;
 	}
@@ -158,13 +147,38 @@ void Character::slowX(void) {
 
 //If on ground, jump.
 void Character::jump(void) {
-	if (y <= 40 || grounded) {
+	if (location.y <= 40 || grounded) {
 		y_v += 10;
 	}
 	offGround();
 }
 
+/*
+ * Prints a point for debugging. The points are numbered
+ *          3     4
+ *           -----
+ *           |   |
+ *           -----
+ *          1     2
+ */
 
+void Character::printPoint(int d) {
+  CPoint point;
+  if (d == 1) {
+    point = getLL();
+  } else if (d == 2) {
+    point = getLR();
+  } else if (d == 3) {
+    point = getUL();
+  } else if (d == 4) {
+    point = getUR();
+  } else {
+    printf("From printPoint in Character.cpp: What was that input? %d? What?\n",
+	   d);
+    return;
+  }
+  printf("x = %d\n y = %d\n", point.x, point.y);
+}
 
 
 

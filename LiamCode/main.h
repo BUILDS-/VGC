@@ -33,4 +33,21 @@ Character* mia;
 
 Level* level;
 
+int cDetectionUp(Character *);
+int cDetectionRight(Character *);
+int cDetectionLeft(Character *);
+int cDetectionDown(Character *);
+void gravity(void);
+void drawMia(void);
+void drawGrid(void);
+void moveMia(void);
+void display(void);
+void reshape(int,int);
+void idle(void);
+void keyPressed (unsigned char,int,int);
+void keyReleased (unsigned char,int,int);
+void keySpecial (int,int,int);
+void keySReleased(int,int,int);
+
+
 #endif

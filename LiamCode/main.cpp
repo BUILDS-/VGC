@@ -23,25 +23,33 @@
 
 #include "main.h"
 
-int cDetectionUp(Character * mover) {
-  int i, ax1, ay1, ax2, bx1, by1, bx2, a_y1, distance_away, end;
-  end = level->getPeople_point();
-  ax1 = mover->getULX();
-  ay1 = mover->getULY();
-  ax2 = mover->getURX();
-  a_y1 = ay1 + mover->getY_V();
+int collide() {
+  if(a < b && b < a_) {
+    return 1;
+  }
+  return 0;
+}
 
+int cDetectionUp(Character * mover) {
+  CPoint a1, a2, b1, b2;
+  int i, a_y, end = 0;
+  int distance_away = -1;
+  end = level->getNumPeople();
+  a1 = mover->getUL();
+  a2 = mover->getUR();
+  a_y = a1.y + mover->getY_V();
+  //Remember this is starting at 1 so that it doesn't include the player.
   for(i = 1; i < end; i++) {
     Character * target = level->getCharacter(i);
-    bx1 = target->getLLX();
-    by1 = target->getLLY();
-    bx2 = target->getLRX();
-    if(ay1 <= by1 && by1 <= a_y1 && ((bx1 <= ax1 && ax2 <= bx2) ||
-				     (ax1 <= bx1 && bx1 <= ax2) ||
-				     (ax1 <= bx2 && bx2 <= ax2))) {
-      int temp = ay1 - by1;
-      if (distance_away == -1 || temp < distance_away)
+    b1 = target->getLL();
+    b2 = target->getLR();
+    if(a1.y < b1.y && b1.y < a_y && ((b1.x < a1.x && a2.x < b2.x) ||
+				     (a1.x < b1.x && b1.x < a2.x) ||
+				     (a1.x < b2.x && b2.x < a2.x))) {
+      int temp = a1.y - b1.y;
+      if (distance_away == -1 || temp < distance_away) {
 	distance_away = temp;
+      }
     }
   }
   if (distance_away != -1) {
@@ -56,31 +64,25 @@ int cDetectionUp(Character * mover) {
 
 
 int cDetectionRight(Character * mover) {
-  //printf("Debug: cDetectionRight\n");
-  int end = level->getPeople_point();
-  int i, ax1, ay1, ay2, a_x1, bx1, by1, by2;
-  ax1 = mover->getURX();
-  ay1 = mover->getURY();
-  ay2 = mover->getLRY();
-  a_x1 = ax1 + mover->getX_V();
-  //printf("ax1 = %d, ay1 = %d, ax2 = %d, ay2 = %d\n", ax1, ay1, ax2, ay2);
-  //printf("a_x1 = %d, a_y1 = %d, a_x2 = %d, a_y2 = %d\n", a_x1, a_y1, a_x2, a_y2);
+  int end = level->getNumPeople();
+  CPoint a1, a2, b1, b2;
+  int i, a_x = 0;
   int distance_away = -1;
+  a1 = mover->getUR();
+  a2 = mover->getLR();
+  a_x = a1.x + mover->getX_V();
   //CHANGE THIS SO THAT IT JUST DOESN'T RUN FOR THE MOVER'S OWN CHARACTER
   for (i = 1; i < end; i++) {
     Character * target = level->getCharacter(i);
-    bx1 = target->getULX();
-    by1 = target->getULY();
-    by2 = target->getLLY();
-    //printf("bx1 = %d, by1 = %d, bx2 = %d, by2 = %d\n", bx1, by1, bx2, by2);
-    
-    
-    if(ax1 <= bx1 && bx1 <= a_x1 && ((by2 <= ay2 && ay1 <= by1) || 
-				     (ay2 <= by2 && by2 <= ay1) || 
-				     (ay2 <= by1 && by1 <= ay1))) {
-      int temp = bx1 - ax1;
-      if (distance_away == -1 || temp < distance_away)
+    b1 = target->getUL();
+    b2 = target->getLL();
+    if(a1.x <= b1.x && b1.x <= a_x && ((b2.y <= a2.y && a1.y <= b1.y) || 
+				       (a2.y <= b2.y && b2.y <= a1.y) || 
+				       (a2.y <= b1.y && b1.y <= a1.y))) {
+      int temp = b1.x - a1.x;
+      if (distance_away == -1 || temp < distance_away) {
 	distance_away = temp;
+      }
     }
   }
   if (distance_away != -1) {
@@ -96,28 +98,23 @@ int cDetectionRight(Character * mover) {
 //Problems REDUNDANT. MAKE MORE EFFICIENT. ALSO DISTANCE AWAY IS WEIRD.
 //ALSO IF STATEMENT MAY BE OVERLY COMPLEX
 int cDetectionLeft(Character * mover) {
-  int end = level->getPeople_point();
-  int i, ax1, ay1, ay2, a_x1, bx1, by1, by2;
-  ax1 = mover->getULX();
-  ay1 = mover->getULY();
-  ay2 = mover->getLLY();
-  a_x1 = ax1 + mover->getX_V();
-  //printf("ax1 = %d, ay1 = %d, ax2 = %d, ay2 = %d\n", ax1, ay1, ax2, ay2);
-  //printf("a_x1 = %d, a_y1 = %d, a_x2 = %d, a_y2 = %d\n", a_x1, a_y1, a_x2, a_y2);
+  int end = level->getNumPeople();
+  CPoint a1, a2, b1, b2;
+  int i, a_x = 0;
   int distance_away = 1;
+  a1 = mover->getUL();
+  a2 = mover->getLL();
+  a_x = a1.x + mover->getX_V();
+
   //CHANGE THIS SO THAT IT JUST DOESN'T RUN FOR THE MOVER'S OWN CHARACTER
   for (i = 1; i < end; i++) {
     Character * target = level->getCharacter(i);
-    bx1 = target->getURX();
-    by1 = target->getURY();
-    by2 = target->getLRY();
-    //printf("bx1 = %d, by1 = %d, bx2 = %d, by2 = %d\n", bx1, by1, bx2, by2);
-    
-    
-    if(ax1 >= bx1 && a_x1 <= bx1 && ((by2 <= ay2 && ay1 <= by1) || 
-				     (ay2 <= by1 && by1 <= ay1) || 
-				     (ay2 <= by2 && by2 <= ay1))) {
-      int temp = bx1 - ax1;
+    b1 = target->getUR();
+    b2 = target->getLR();
+    if(a1.x >= b1.x && a_x <= b1.x && ((b2.y <= a2.y && a1.y <= b1.y) || 
+				       (a2.y <= b1.y && b1.y <= a1.y) || 
+				       (a2.y <= b2.y && b2.y <= a1.y))) {
+      int temp = b1.x - a1.x;
 
       //Distance away maintains the number of pixals between it and nearest 
       //object. FIX SO THAT THE DEFAULT DOESN'T FLUCTUATE
@@ -139,29 +136,24 @@ int cDetectionLeft(Character * mover) {
 //Problems REDUNDANT. MAKE MORE EFFICIENT. ALSO DISTANCE AWAY IS WEIRD.
 //ALSO IF STATEMENT MAY BE OVERLY COMPLEX
 int cDetectionDown(Character * mover) {
-  //printf("Debug: cDetectionDown\n");
-  int end = level->getPeople_point();
-  int i, ax1, ay1, ax2, a_y1, bx1, by1, bx2;
-  ax1 = mover->getLLX();
-  ay1 = mover->getLLY();
-  ax2 = mover->getLRX();
-  //printf("mover->getY_V() = %d\n", mover->getY_V());
-  a_y1 = ay1 + mover->getY_V();
-  //printf("ax1 = %d, ay1 = %d, ax2 = %d, ay2 = %d\n", ax1, ay1, ax2, ay2);
-  //printf("a_x1 = %d, a_y1 = %d, a_x2 = %d, a_y2 = %d\n", a_x1, a_y1, a_x2, a_y2);
+  int end = level->getNumPeople();
+  CPoint a1, a2, b1, b2;
+  int i, a_y = 0;
   int distance_away = 1;
+  a1 = mover->getLL();
+  a2 = mover->getLR();
+  a_y = a1.y + mover->getY_V();
+
   //CHANGE THIS SO THAT IT JUST DOESN'T RUN FOR THE MOVER'S OWN CHARACTER
   for (i = 1; i < end; i++) {
     Character * target = level->getCharacter(i);
-    bx1 = target->getULX();
-    by1 = target->getULY();
-    bx2 = target->getURX();
-    //printf("bx1 = %d, by1 = %d, bx2 = %d, by2 = %d\n", bx1, by1, bx2, by2);
+    b1 = target->getUL();
+    b2 = target->getUR();
     
-    if(a_y1 <= by1 && by1 <= ay1 && ((bx1 <= ax1 && ax2 <= bx2) || 
-				     (ax1 <= bx1 && bx1 <= ax2) || 
-				     (ax1 <= bx2 && bx2 <= ax2))) {
-      int temp = by1 - ay1;
+    if(a_y <= b1.y && b1.y <= a1.y && ((b1.x <= a1.x && a2.x <= b2.x) || 
+				       (a1.x <= b1.x && b1.x <= a2.x) || 
+				       (a1.x <= b2.x && b2.x <= a2.x))) {
+      int temp = b1.y - a1.y;
       if (distance_away == 1 || temp < distance_away)
 	distance_away = temp;
     }
@@ -180,15 +172,15 @@ int cDetectionDown(Character * mover) {
 
 /*
  Gravity! Every some such frame (can't get global
- constants to work) gravity increases mia's downward
+ constants to work gravity increases mia's downward
  velocity by one.
  */
 void gravity(void) {
-  int end = level->getPeople_point();
+  int end = level->getNumPeople();
   int i;
   for (i = 0; i < end; i++) {
     Character * target = level->getCharacter(i);
-    int x = target->getY();
+    int x = (target->getLL()).x;
 	 //as long as not on the floor (the floor being
 	 //at x = 40
 	if (x > 40) {
@@ -202,14 +194,12 @@ void gravity(void) {
 //Draws Mia
 void drawMia(void) {
 
-  int end = level->getPeople_point();
+  int end = level->getNumPeople();
   int i;
   for (i = 0; i < end; i++) {
-    float mia_x = level->getCharacter(i)->getX();
-    float mia_y = level->getCharacter(i)->getY();
-	
-    //float mia_size = 20
-    
+    int mia_x = (level->getCharacter(i)->getLL()).x;
+    int mia_y = (level->getCharacter(i)->getLL()).y;
+
     glPushMatrix();
     glBegin(GL_QUADS);
     glVertex2f(mia_x, mia_y);
@@ -217,9 +207,7 @@ void drawMia(void) {
     glVertex2f(mia_x + mia->getWidth(), mia_y + mia->getHeight());
     glVertex2f(mia_x, mia_y + mia->getHeight());
     glEnd();
-  }
-	
-	
+  }	
 }
 
 //Draws the grid.
@@ -261,26 +249,20 @@ void moveMia(void) {
     mia->slowX();
   }
   
-  //jump.
   if (keys[' ']) {
     direction = ' ';
-    printf("jump\n");
     mia->jump();
-    printf("Y_V = %d\n", mia->getY_V());
   }
   
-  //Test to prove opengl can read two keys at once.
-  if (keys[100]&&keys[101]) { printf("WINNER!!\n");}
-  
-  if(direction == 'r') 
+  if (0 < mia->getX_V()) {
     cDetectionRight(mia);
-  else if (direction == 'l')
+  } else if (0 > mia->getX_V()) {
     cDetectionLeft(mia);
-  else if (direction == 'd')
+  } else if (0 < mia->getY_V()) {
+    cDetectionUp(mia);
+  } else if (0 > mia->getY_V()) {
     cDetectionDown(mia);
-  
-  if(direction == ' ')
-    printf("Y_V = %d\n", mia->getY_V());
+  }
   mia->move();
 }
  
@@ -329,14 +311,12 @@ void display(void)
 	if (frame % 15 == 0) {
 		gravity();
 		moveMia();
-		int end = level->getPeople_point();
+		int end = level->getNumPeople();
 		int i;
 		for(i = 1; i < end; i++) {
 		  level->getCharacter(i)->move();
 		}
-	
 	}
-
 	
 	//Draws Mia.
 	drawMia();

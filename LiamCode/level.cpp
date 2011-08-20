@@ -6,12 +6,12 @@
 Level::Level(void) {
 
   people = new Character *[10];
-  people_point = 0;
+  num_people = 0;
 
 }
 
-int Level::getPeople_point() {
-  return people_point;
+int Level::getNumPeople() {
+  return num_people;
 }
 
 Character * Level::getCharacter(int i) {
@@ -20,7 +20,7 @@ Character * Level::getCharacter(int i) {
 
 void Level::addCharacter(Character* dude) {
 
-  people[people_point] = dude;
-  people_point++;
+  people[num_people] = dude;
+  num_people++;
 
 }

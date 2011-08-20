@@ -10,10 +10,11 @@ class Level {
   //Array of Characters
   Character** people;
   //number of characters in level
-  int people_point;
+  int num_people;
 
 public:
-  Level(void);  int getPeople_point();
+  Level(void);  
+  int getNumPeople();
   Character * getCharacter(int);
   void addCharacter(Character *);
 

@@ -23,18 +23,44 @@ Level.cpp
 This is what stores what's in the level.
 
 
-Things to do:
-Bugs! Collision detection is wonky. One it needs be executed when the character
-is moving and not just when the player has his/her finger on an arrow key.
+------------------------TO DO-------------------------------
 
-Second, collision detection is inefficient. Someone should whittle it down to
-one function or a few smaller functions.
+Next step:
+
+Have the camera focus on the main character.
+
+Have terrain of SOME kind. 
+(I know I shouldn't be thinking of stairs right now, but holy fuck those are 
+going to be hard)
+
+Bugs to fix:
+
+There is an odd bug where if the character is touching an object on it's right
+or left side, it jumps up much, much faster. This is mirrored when the player is
+on top of another object, where the player will go left and right at higher
+velocity (unconfermed). This probably has to do with how collision detection
+screws with velocity.
+
+Fuck that, it's more than that. Jump around for a while and you'll see it. Fix it.
 
 Also, the code currently runs very slowly on Linux. Finding a fix for that if we
 want to work in openGL is a must.
 
-Make a coordinate system with (x,y) struct. Not seperate.
 
-level->People_point is a vague term. Make into number_of_people.
+Formatting:
+
+Collision detection is inefficient. Someone should whittle it down to
+one function or a few smaller functions.
+
+Also make everything switch statements rather than if else
+
+Header file for main.h should have functions.
+
+STRUCTS FUCK YOOOOOOOOU (make a good constructor for them)
+
+CMake:
+The Libraries you include specify exact file paths and that's a no no.
+Macs and Windows don't use the same file system as Linux and this will cause
+problems.
 
 REMEMBER, OPENGL HAS THE ORIGIN AT THE LOWER LEFT OF THE SCREEN
