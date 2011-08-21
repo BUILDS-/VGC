@@ -35,22 +35,26 @@ going to be hard)
 
 Bugs to fix:
 
-There is an odd bug where if the character is touching an object on it's right
-or left side, it jumps up much, much faster. This is mirrored when the player is
-on top of another object, where the player will go left and right at higher
-velocity (unconfermed). This probably has to do with how collision detection
-screws with velocity.
+Anything in the first column of the grid seems to ignore gravity
 
-Fuck that, it's more than that. Jump around for a while and you'll see it. Fix it.
+Can't change the position of objects.
+
+If you land on the exact corner of an object, you get stuck until you jump
+
+Does not land exactly at 40 pixals when jumping.
 
 Also, the code currently runs very slowly on Linux. Finding a fix for that if we
 want to work in openGL is a must.
 
+If you manage to hit both the right and down arrow keys just as the player hits
+an object, you fall through it.
 
 Formatting:
 
 Collision detection is inefficient. Someone should whittle it down to
 one function or a few smaller functions.
+
+Rename collision names.
 
 Also make everything switch statements rather than if else
 

@@ -66,6 +66,14 @@ int Character::getY_V(void) {
   return y_v;
 }
 
+int Character::isGoingRight(void) {
+  return (getX_V() > 0);
+}
+
+int Character::isGoingLeft(void) {
+  return (getX_V() < 0);
+}
+
 int Character::getHeight(void) {
   return height;
 }
@@ -126,6 +134,11 @@ void Character::setY_V(int neoY_V) {
   y_v = neoY_V;
 }
 
+void Character::setV(CPoint p) {
+  x_v = p.x;
+  y_v = p.y;
+}
+
 //Updates location based on velocity
 void Character::move(void) {
 	location.x += x_v;
@@ -134,6 +147,12 @@ void Character::move(void) {
 	} else {
 		y_v = 0;
 	}
+}
+
+void Character::moveTo(CPoint distance_away, CPoint set_to) {
+  setV(distance_away);
+  move();
+  setV(set_to);
 }
 
 //Friction on x access.
