@@ -76,31 +76,67 @@ int cDetectionRight(Character * mover) {
 }
 
 
-//Problems REDUNDANT. MAKE MORE EFFICIENT. ALSO DISTANCE AWAY IS WEIRD.
-//ALSO IF STATEMENT MAY BE OVERLY COMPLEX
+// Problems REDUNDANT. MAKE MORE EFFICIENT. ALSO DISTANCE AWAY IS WEIRD.
+// ALSO IF STATEMENT MAY BE OVERLY COMPLEX
 int cDetectionDown(Character * mover) {
   int end = level->getNumPeople();
-  int i, a_y1, a_y2 = 0;
+  int i, a_y1, a_y2, a_x1, a_x2 = 0;
   CPoint* distance_away = NULL;
-  CPoint set_to = {mover->getX_V(),0};
+  CPoint set_to = {mover->getX_V(), mover->getY_V()};
+  //printf("%d %d start\n",set_to.x,set_to.y);
   a_y1 = mover->getLL().y + mover->getY_V();
   a_y2 = mover->getUL().y + mover->getY_V();
+  a_x1 = mover->getUR().x + mover->getX_V();
+  a_x2 = mover->getUL().x + mover->getX_V();
   //CHANGE THIS SO THAT IT JUST DOESN'T RUN FOR THE MOVER'S OWN CHARACTER
   for (i = 1; i < end; i++) {
     Character * target = level->getCharacter(i);
-    if(((mover->getY_V() < 0 && isInBetween(mover->getLL().y,target->getUL().y,a_y1)) || 
-	(mover->getY_V() > 0 && isInBetween(mover->getUL().y,target->getLL().y,a_y2))) && 
+    if(((mover->isGoingDown() && 
+	 isInBetween(mover->getLL().y,target->getUL().y,a_y1)) || 
+	(mover->isGoingUp() && 
+	 isInBetween(mover->getUL().y,target->getLL().y,a_y2))) && 
        collide(mover->getLL().x,mover->getLR().x,target->getUL().x,target->getUR().x)) {
-      int temp; 
-      if(0 < mover->getY_V()) {
-	temp = target->getLL().y - mover->getUL().y;
+      int temp_y; 
+      if(0 < mover->isGoingUp()) {
+	temp_y = target->getLL().y - mover->getUL().y;
       } else {
-	temp = target->getUL().y - mover->getLL().y;
+	temp_y = target->getUL().y - mover->getLL().y;
       }
-      if (distance_away == NULL || temp < (*distance_away).y) {
-	CPoint  distance_away_value = {0, temp};
-	distance_away = &distance_away_value;
+      if (distance_away == NULL || temp_y < (*distance_away).y) {
+	//not pretty. Make the CPoint at the beginning and change the value
+	//later.
+	if (distance_away == NULL) {
+	  CPoint  distance_away_value = {0, temp_y};
+	  distance_away = &distance_away_value;
+	  set_to.y = 0;
+	} else {
+	  (*distance_away).y = temp_y;
+	}
       }
+    }
+  
+    if(((mover->isGoingRight() && 
+	 isInBetween(mover->getUR().x, target->getUL().x, a_x1)) || 
+	(mover->isGoingLeft() && 
+	 isInBetween(mover->getUL().x, target->getUR().x, a_x2))) && 
+       collide(mover->getLR().y,mover->getUR().y,target->getLL().y,target->getUL().y)) {
+      int temp_x;
+      if(mover->isGoingRight()) {
+	temp_x = target->getUL().x - mover->getUR().x;
+      } else {
+	temp_x = target->getUR().x - mover->getUL().x;
+      }
+      if (distance_away == NULL || temp_x < (*distance_away).x) {
+	if (distance_away == NULL) {
+	  CPoint distance_away_value = {temp_x, 0};
+	  distance_away = &distance_away_value;
+	  set_to.x = 0;
+	} else {
+	  (*distance_away).x = temp_x;
+	}
+      }
+      
+      
     }
   }
   if (distance_away != NULL) {
@@ -193,13 +229,14 @@ void moveMia(void) {
   
   if (keys[' ']) {
     direction = ' ';
+    printf("jump\n");
     mia->jump();
   }
   
   if (0 < mia->getX_V()) {
-    cDetectionRight(mia);
+    cDetectionDown(mia);
   } else if (0 > mia->getX_V()) {
-    cDetectionRight(mia);
+    cDetectionDown(mia);
   } else if (0 < mia->getY_V()) {
     cDetectionDown(mia);
   } else if (0 > mia->getY_V()) {

@@ -23,6 +23,8 @@ public:
 	int getY_V(void);
 	int isGoingRight(void);
 	int isGoingLeft(void);
+	int isGoingUp(void);
+	int isGoingDown(void);
 	int getHeight(void);
 	int getWidth(void);
 

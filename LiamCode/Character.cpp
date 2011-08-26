@@ -74,6 +74,14 @@ int Character::isGoingLeft(void) {
   return (getX_V() < 0);
 }
 
+int Character::isGoingUp(void) {
+  return (getY_V() > 0);
+}
+
+int Character::isGoingDown(void) {
+  return (getY_V() < 0);
+}
+
 int Character::getHeight(void) {
   return height;
 }
@@ -153,6 +161,7 @@ void Character::moveTo(CPoint distance_away, CPoint set_to) {
   setV(distance_away);
   move();
   setV(set_to);
+  printf("%d %d\n",set_to.x,set_to.y);
 }
 
 //Friction on x access.
@@ -166,7 +175,7 @@ void Character::slowX(void) {
 
 //If on ground, jump.
 void Character::jump(void) {
-	if (location.y <= 40 || grounded) {
+	if (location.y <= 10 || grounded) {
 		y_v += 10;
 	}
 	offGround();
