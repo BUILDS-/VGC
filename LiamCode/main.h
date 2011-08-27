@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "level.h"
 
 //Imports fundamental constants and functions for GLUT and OpenGL

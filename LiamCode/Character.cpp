@@ -16,7 +16,10 @@
 //My sad sad attempt at a global constant.
 extern int SPEED;
 
-//Constructor
+/*
+ * Default constructer. Creates a non-moving object with a height and width of 
+ * 20 pixals.
+ */
 Character::Character(void) {
   CPoint temp = {0,0};
   location = temp;
@@ -27,7 +30,7 @@ Character::Character(void) {
   width = 20;
 }
 
-//Redundant, yes. Will fix later.
+//
 Character::Character (int x, int y) {
   CPoint temp = {x,y};
   location = temp;
@@ -149,19 +152,35 @@ void Character::setV(CPoint p) {
 
 //Updates location based on velocity
 void Character::move(void) {
-	location.x += x_v;
-	if(location.y > 40 || y_v > 0) {
-		location.y += y_v;
-	} else {
-		y_v = 0;
-	}
+  location.x += x_v;
+  if(location.y > 40 || y_v > 0) {
+    location.y += y_v;
+  } else {
+    y_v = 0;
+    onGround();
+  }
+}
+
+void Character::ifUnchanged(CPoint *distance_away, CPoint *set_to) {
+  if ((*distance_away).x == INT_MAX) {
+    (*distance_away).x = 0;
+    (*set_to).x = getX_V();
+  }
+  if ((*distance_away).y == INT_MAX) {
+    (*distance_away).y = 0;
+    (*set_to).y = getY_V();
+  }
+    
+
 }
 
 void Character::moveTo(CPoint distance_away, CPoint set_to) {
+  ifUnchanged(&distance_away, &set_to);
   setV(distance_away);
+  int temp_grounded = grounded;
   move();
+  grounded = temp_grounded;
   setV(set_to);
-  printf("%d %d\n",set_to.x,set_to.y);
 }
 
 //Friction on x access.
@@ -175,10 +194,10 @@ void Character::slowX(void) {
 
 //If on ground, jump.
 void Character::jump(void) {
-	if (location.y <= 10 || grounded) {
-		y_v += 10;
-	}
-	offGround();
+  if (grounded) {
+    y_v += 10;
+  }
+  offGround();
 }
 
 /*

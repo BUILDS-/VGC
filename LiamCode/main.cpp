@@ -30,6 +30,7 @@ int isInBetween(int a, int b, int c) {
   return 0;
 }
 
+
 int collide(int a1, int a2, int b1, int b2) {
   if((b1 <= a1 && a2 <= b2) || 
      (a1 <= b1 && b1 <= a2) ||
@@ -40,111 +41,81 @@ int collide(int a1, int a2, int b1, int b2) {
 }
 
 
-int cDetectionRight(Character * mover) {
-  int end = level->getNumPeople();
-  int i, a_x1, a_x2 = 0;
-  CPoint* distance_away = NULL;
-  CPoint set_to = {0,mover->getY_V()};
-  a_x1 = mover->getUR().x + mover->getX_V();
-  a_x2 = mover->getUL().x + mover->getX_V();
-  //CHANGE THIS SO THAT IT JUST DOESN'T RUN FOR THE MOVER'S OWN CHARACTER
-  for (i = 1; i < end; i++) {
-    Character * target = level->getCharacter(i);
-    if(((mover->isGoingRight() && 
-	 isInBetween(mover->getUR().x, target->getUL().x, a_x1)) || 
-	(mover->isGoingLeft() && 
-	 isInBetween(mover->getUL().x, target->getUR().x, a_x2))) && 
-       collide(mover->getLR().y,mover->getUR().y,target->getLL().y,target->getUL().y)) {
-      int temp;
-      if(mover->isGoingRight()) {
-	temp = target->getUL().x - mover->getUR().x;
-      } else {
-	temp = target->getUR().x - mover->getUL().x;
-      }
-      if (distance_away == NULL || temp < (*distance_away).x) {
-	CPoint distance_away_value = {temp, 0};
-	distance_away = &distance_away_value;
-      }
-    }
+int collideDown(Character *mover, Character *target) {
+  int a_y = mover->getLL().y + mover->getY_V();
+  if(mover->isGoingDown() &&
+     isInBetween(mover->getLL().y, target->getUL().y, a_y) &&
+     collide(mover->getLL().x, mover->getLR().x, target->getUL().x,
+	     target->getUR().x)) {
+    return 1;
   }
-  if (distance_away != NULL) {
-    mover->moveTo(*distance_away,set_to);
-    return 0;
-  }
-  return 1;
-
+  return 0;
 }
 
+int collideUp(Character *mover, Character *target) {
+  int a_y = mover->getUL().y + mover->getY_V();
+  if(mover->isGoingUp() &&
+     isInBetween(mover->getUL().y,target->getLL().y,a_y) && 
+     collide(mover->getLL().x, mover->getLR().x, target->getUL().x, 
+	     target->getUR().x)) {
+    return 1;
+  }
+  return 0;
+}
+
+int collideRight(Character *mover, Character *target) {
+  int a_x = mover->getUR().x + mover->getX_V();
+  if(mover->isGoingRight() &&
+     isInBetween(mover->getUR().x, target->getUL().x, a_x) &&
+     collide(mover->getLR().y, mover->getUR().y, target->getLL().y, 
+	     target->getUL().y)) {
+    return 1;
+  }
+  return 0;
+}
+
+int collideLeft(Character *mover, Character *target) {
+  int a_x = mover->getUL().x + mover->getX_V();
+  if(mover->isGoingLeft() &&
+     isInBetween(mover->getUL().x, target->getUR().x, a_x) &&
+     collide(mover->getLR().y, mover->getUR().y, target->getLL().y, 
+	     target->getUL().y)) {
+    return 1;
+  }
+  return 0;
+}
 
 // Problems REDUNDANT. MAKE MORE EFFICIENT. ALSO DISTANCE AWAY IS WEIRD.
 // ALSO IF STATEMENT MAY BE OVERLY COMPLEX
 int cDetectionDown(Character * mover) {
+  int i;
   int end = level->getNumPeople();
-  int i, a_y1, a_y2, a_x1, a_x2 = 0;
-  CPoint* distance_away = NULL;
-  CPoint set_to = {mover->getX_V(), mover->getY_V()};
-  //printf("%d %d start\n",set_to.x,set_to.y);
-  a_y1 = mover->getLL().y + mover->getY_V();
-  a_y2 = mover->getUL().y + mover->getY_V();
-  a_x1 = mover->getUR().x + mover->getX_V();
-  a_x2 = mover->getUL().x + mover->getX_V();
+  CPoint distance_away = {INT_MAX, INT_MAX};
+  CPoint set_to = {0, 0};
   //CHANGE THIS SO THAT IT JUST DOESN'T RUN FOR THE MOVER'S OWN CHARACTER
   for (i = 1; i < end; i++) {
     Character * target = level->getCharacter(i);
-    if(((mover->isGoingDown() && 
-	 isInBetween(mover->getLL().y,target->getUL().y,a_y1)) || 
-	(mover->isGoingUp() && 
-	 isInBetween(mover->getUL().y,target->getLL().y,a_y2))) && 
-       collide(mover->getLL().x,mover->getLR().x,target->getUL().x,target->getUR().x)) {
-      int temp_y; 
-      if(0 < mover->isGoingUp()) {
-	temp_y = target->getLL().y - mover->getUL().y;
-      } else {
-	temp_y = target->getUL().y - mover->getLL().y;
-      }
-      if (distance_away == NULL || temp_y < (*distance_away).y) {
-	//not pretty. Make the CPoint at the beginning and change the value
-	//later.
-	if (distance_away == NULL) {
-	  CPoint  distance_away_value = {0, temp_y};
-	  distance_away = &distance_away_value;
-	  set_to.y = 0;
-	} else {
-	  (*distance_away).y = temp_y;
-	}
-      }
+    CPoint temp = {-1, -1};
+    //Remember to set set_to.[x,y] to zero when there is a collision there.
+    if(collideUp(mover, target)) {
+      temp.y = target->getLL().y - mover->getUL().y;
+    } else if (collideDown(mover,target)) {
+      mia->onGround();
+      temp.y = target->getUL().y - mover->getLL().y;
+    }  
+    if(collideRight(mover, target)) {
+      temp.x = target->getUL().x - mover->getUR().x;
+    } else if (collideLeft(mover, target)) {
+      temp.x = target->getUR().x - mover->getUL().x;
     }
-  
-    if(((mover->isGoingRight() && 
-	 isInBetween(mover->getUR().x, target->getUL().x, a_x1)) || 
-	(mover->isGoingLeft() && 
-	 isInBetween(mover->getUL().x, target->getUR().x, a_x2))) && 
-       collide(mover->getLR().y,mover->getUR().y,target->getLL().y,target->getUL().y)) {
-      int temp_x;
-      if(mover->isGoingRight()) {
-	temp_x = target->getUL().x - mover->getUR().x;
-      } else {
-	temp_x = target->getUR().x - mover->getUL().x;
-      }
-      if (distance_away == NULL || temp_x < (*distance_away).x) {
-	if (distance_away == NULL) {
-	  CPoint distance_away_value = {temp_x, 0};
-	  distance_away = &distance_away_value;
-	  set_to.x = 0;
-	} else {
-	  (*distance_away).x = temp_x;
-	}
-      }
-      
-      
+    if (temp.x != -1 && temp.x < distance_away.x) {
+      distance_away.x = temp.x;
+    }
+    if (temp.y != -1 && temp.y < distance_away.y) {
+      distance_away.y = temp.y;
     }
   }
-  if (distance_away != NULL) {
-    mover->moveTo(*distance_away,set_to);
-    mover->onGround();
-    return 0;
-  }
-  return 1;
+  mover->moveTo(distance_away, set_to);
 }
 
 
@@ -160,11 +131,9 @@ void gravity(void) {
     Character * target = level->getCharacter(i);
     int x = (target->getLL()).x;
 	 //as long as not on the floor (the floor being
-	 //at x = 40
+	 //at x = 40)
 	if (x > 40) {
 	  target->moveDown();
-	  cDetectionDown(mia);
-		//printf("Now at %d\n", target->getY());
 	}
   }
 }
@@ -219,29 +188,24 @@ void moveMia(void) {
   } else if (keys[102]) {
     direction = 'r'; 
     mia->moveRight();
-  } else if (keys[103]) {
+
+    //If you press the down key, the player will go down faster (if uncommented)
+/*  } else if (keys[103]) {
     direction = 'd';
     mia->moveDown();
     mia->slowX();
+ */
+
   } else {
     mia->slowX();
   }
   
   if (keys[' ']) {
     direction = ' ';
-    printf("jump\n");
     mia->jump();
   }
   
-  if (0 < mia->getX_V()) {
-    cDetectionDown(mia);
-  } else if (0 > mia->getX_V()) {
-    cDetectionDown(mia);
-  } else if (0 < mia->getY_V()) {
-    cDetectionDown(mia);
-  } else if (0 > mia->getY_V()) {
-    cDetectionDown(mia);
-  }
+  cDetectionDown(mia);
   mia->move();
 }
  

@@ -1,1 +1,0 @@
-/usr/bin/c++    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/level.cpp.o CMakeFiles/main.dir/Character.cpp.o  -o main  -L/usr/X11R6/lib -L/usr/opt/local/lib -lGL -lX11 -lGLU -lglut 
