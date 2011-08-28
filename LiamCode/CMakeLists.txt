@@ -9,8 +9,8 @@ set(CMAKE_CPP_FLAGS -Wall)
 
 #These include the directories with the various GL files
 #WARNING, MAY NOT WORK FOR SYSTEMS OTHER THAN LINUX!
-include_directories(/usr/X11R6/include /opt/local/include)
-link_directories(/usr/X11R6/lib /usr/opt/local/lib)
+include_directories(/usr/X11R6/include /usr/local/include)
+link_directories(/usr/X11R6/lib /usr/local/lib)
 
 #creates the executables and links the various cpp files together
 add_executable(main main.cpp level.cpp Character.cpp)

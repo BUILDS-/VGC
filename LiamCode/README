@@ -41,24 +41,32 @@ Can't change the position of objects.
 
 If you land on the exact corner of an object, you get stuck until you jump
 
-Does not land exactly at 40 pixals when jumping.
+Does not land exactly at 40 pixels when jumping.
 
 Also, the code currently runs very slowly on Linux. Finding a fix for that if we
 want to work in openGL is a must.
 
-If you manage to hit both the right and down arrow keys just as the player hits
+--If you manage to hit both the right and down arrow keys just as the player hits
 an object, you fall through it.
+(Not been replicated for a while, so may no longer be a thing)
+
+Max number of characters per level is currently 10. Rewrite the function so that
+the array automatically allcates more space as needed.
 
 Formatting:
 
-Collision detection is inefficient. Someone should whittle it down to
-one function or a few smaller functions.
+Add more files to this README
 
-Rename collision names.
+Make instructions better for this README.
+
+Throw an exception if the user calls a character from the array in level that
+doesn't exist.
 
 Also make everything switch statements rather than if else
 
-Header file for main.h should have functions.
+Make a seperate spawn function.
+
+frames counting is redundant.
 
 STRUCTS FUCK YOOOOOOOOU (make a good constructor for them)
 
