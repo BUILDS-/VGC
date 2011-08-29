@@ -14,6 +14,9 @@ class Level {
   // Number of characters in level.
   int num_people;
 
+  // Current length of array
+  int max_size;
+
 public:
 
   // Default constructor.

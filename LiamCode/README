@@ -2,6 +2,12 @@ Basic Readme
 
 This is the template for a genaric side-scrolling video game.
 
+If you've just downloaded this and never compiled before, do the following.
+Go to the main directory with all the code (main.cpp Character.cpp, etc).
+mkdir build
+cd build
+cmake ..
+
 To compile, go into the build/ folder and type the commands:
 make clean
 make
@@ -11,16 +17,22 @@ Then an executable called "main" should appear in the build folder. Run that.
 IF SOMETHING SHOULD FAIL AT THIS POINT, DON'T PANIC.
 Simply contact a VGC or Builds member familiar with cmake.
 
-Main.cpp: 
+main.cpp: 
 This is the command flow for the code. Also where collision detection and
-gravity functions are, but those should be moved out pronto.
+gravity functions are.
 
 Character.cpp:
 This is where a character (right now, THE character) functions are. This keeps
 track of where the character is and the actions it cand do (move, jump, etc).
 
-Level.cpp
-This is what stores what's in the level.
+level.cpp
+This is what stores what's in the level. (Characters, terrain, etc).
+
+types.h
+This is where the various structs and types are declared.
+
+consts.h
+This is where the global defines are.
 
 
 ------------------------TO DO-------------------------------
@@ -50,23 +62,7 @@ want to work in openGL is a must.
 an object, you fall through it.
 (Not been replicated for a while, so may no longer be a thing)
 
-Max number of characters per level is currently 10. Rewrite the function so that
-the array automatically allcates more space as needed.
-
 Formatting:
-
-Add more files to this README
-
-Make instructions better for this README.
-
-Throw an exception if the user calls a character from the array in level that
-doesn't exist.
-
-Also make everything switch statements rather than if else
-
-Make a seperate spawn function.
-
-frames counting is redundant.
 
 STRUCTS FUCK YOOOOOOOOU (make a good constructor for them)
 

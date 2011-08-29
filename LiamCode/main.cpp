@@ -267,47 +267,42 @@ void drawGrid(void) {
   mia->move();
 }
 
+
+// Spawns levels and characters.
+void spawn_level(void) {
+  // Spawns at pixal x = 200 and y = 200
+  mia = new Character(200, 200);
+  spawn = true;
+  level = new Level();
+  level->addCharacter(mia);
+    
+  Character * block = new Character(100, 100);
+  level->addCharacter(block);
+}
+
 /*
  * Where the main loop is. For (mostly) every frame this function is called.
  * Spawns the character and level if either hasn't been made yet. Reads input
  * from the player and moves the player accordingly. Draws what the screen sees,
  * etc. This function is what organizes the control flow of the game. 
  */
-void display(void)
-{
+void display(void) {
   // Keeps track of what frame we're on.
   frame++;
+  
   // Clears the color and depth buffers
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
   
-  // Spawns Mia (if she hasn't been spawned)
+  // Spawns objects (if they haven't been spawned)
   if (!spawn) {
-    // Spawns at pixal x = 200 and y = 200
-    mia = new Character(200, 200);
-    spawn = true;
-    level = new Level();
-    level->addCharacter(mia);
-    
-    Character * block = new Character(100, 100);
-    level->addCharacter(block);
-    
+    spawn_level();
   }
   
   // Draws grid.
   drawGrid();
 	
 	
-  // If this is the first frame, set the global frametime variable
-  if (lastFrameTime == 0)
-    {
-      lastFrameTime = glutGet(GLUT_ELAPSED_TIME);
-    }
-  int now = glutGet(GLUT_ELAPSED_TIME);
-  
-  // Keeps track of how many frames has passed. May be useful in the future.
-  lastFrameTime = now;
-  
   // If player is pressing arrow key, move mia, then bring gravity
   // into effect. Only does it every 15th frame to keep from insanely
   // high acceleration.

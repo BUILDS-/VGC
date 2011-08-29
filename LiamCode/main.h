@@ -14,12 +14,8 @@
 
 using namespace std;
 
-
 // Keeps track of what frame number we are on.
 int frame = 0;
-
-// Keeps track of what frame number we are on.
-int lastFrameTime = 0;
 
 // Location of moving box.
 float boxX = 0.0f;
@@ -85,6 +81,9 @@ void drawGrid(void);
 // Interpretes key presses and assosiates them with the appropriate actions.
 // (ie, press left and the player character will move left).
 void moveMia(void);
+
+// Spawns level and characters.
+void spawn_level(void);
 
 // Function is called once per frame. MAIN LOOP.
 void display(void);
