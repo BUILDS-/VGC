@@ -1,0 +1,74 @@
+Basic Readme
+
+This is the template for a genaric side-scrolling video game.
+
+If you've just downloaded this and never compiled before, do the following.
+Go to the main directory with all the code (main.cpp Character.cpp, etc).
+mkdir build
+cd build
+cmake ..
+
+To compile, go into the build/ folder and type the commands:
+make clean
+make
+
+Then an executable called "main" should appear in the build folder. Run that.
+
+IF SOMETHING SHOULD FAIL AT THIS POINT, DON'T PANIC.
+Simply contact a VGC or Builds member familiar with cmake.
+
+main.cpp: 
+This is the command flow for the code. Also where collision detection and
+gravity functions are.
+
+Character.cpp:
+This is where a character (right now, THE character) functions are. This keeps
+track of where the character is and the actions it cand do (move, jump, etc).
+
+level.cpp
+This is what stores what's in the level. (Characters, terrain, etc).
+
+types.h
+This is where the various structs and types are declared.
+
+consts.h
+This is where the global defines are.
+
+
+------------------------TO DO-------------------------------
+
+Next step:
+
+Have the camera focus on the main character.
+
+Have terrain of SOME kind. 
+(I know I shouldn't be thinking of stairs right now, but holy fuck those are 
+going to be hard)
+
+Bugs to fix:
+
+Anything in the first column of the grid seems to ignore gravity
+
+Can't change the position of objects.
+
+If you land on the exact corner of an object, you get stuck until you jump
+
+Does not land exactly at 40 pixels when jumping.
+
+Also, the code currently runs very slowly on Linux. Finding a fix for that if we
+want to work in openGL is a must.
+
+--If you manage to hit both the right and down arrow keys just as the player hits
+an object, you fall through it.
+(Not been replicated for a while, so may no longer be a thing)
+
+Formatting:
+
+STRUCTS FUCK YOOOOOOOOU (make a good constructor for them)
+
+CMake:
+The Libraries you include specify exact file paths and that's a no no.
+Macs and Windows don't use the same file system as Linux and this will cause
+problems.
+
+REMEMBER, OPENGL HAS THE ORIGIN AT THE LOWER LEFT OF THE SCREEN
