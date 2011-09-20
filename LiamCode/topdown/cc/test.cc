@@ -28,7 +28,7 @@ SDL_Surface *load_image(std::string filename) {
   //If nothing went wrong in loading the image
   if(loadedImage != NULL) {
 	//Create an optimize image
-	optimizedImage = SDL_DisplayFormate(loadedImage);
+	optimizedImage = SDL_DisplayFormat(loadedImage);
 	//Free the old image
 	SDL_FreeSurface(loadedImage);
   }
@@ -46,7 +46,7 @@ void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface* destination) 
   offset.y = y;
 
   //Blit surface. surface ????, picture    , target
-  SDL_BlitSurface(source, NULL, destination, &offseet);
+  SDL_BlitSurface(source, NULL, destination, &offset);
 
 
 }
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
   }
 
   //Sets the widnow caption
-  SDL_WM_SETCAPTION("VGC", NULL);
+  SDL_WM_SetCaption("VGC", NULL);
 
   hello = SDL_LoadBMP( "images/hello.bmp" );
   background = load_image("background.bmp");
