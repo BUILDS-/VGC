@@ -25,7 +25,7 @@
 
 #include "SDL/SDL.h"
 //#include <string>
-#include "SDL_gfxPrimitives.h"
+#include "SDL/SDL_gfxPrimitives.h"
 
 //The attributes of the screen                                                                                                                                                              
 const int SCREEN_WIDTH = 640;
