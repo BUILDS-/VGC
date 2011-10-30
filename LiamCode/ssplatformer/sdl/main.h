@@ -8,9 +8,22 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "level.h"
+#include "SDL/SDL.h"
+#include "SDL/SDL_gfxPrimitives.h"
 
 
 using namespace std;
+
+                                         
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
+const int SCREEN_BPP = 32;
+
+//The surfaces that will be used                                                                                                                                                            
+SDL_Surface *hello = NULL;
+SDL_Surface *background = NULL;
+SDL_Surface *screen = NULL;
+
 
 // Keeps track of what frame number we are on.
 int frame = 0;
@@ -18,18 +31,12 @@ int frame = 0;
 // Location of moving box.
 float boxX = 0.0f;
 
-// Width of main window in pixels.
-int width = 640;
-
-// Height of main window in pixels.
-int height = 480;
-
 // Has the main character spawned?
 bool spawn = false;
 
 // If a key is pressed, the corresponding boolean in the array is set to true.
 // If a key is released, the corresponding boolean in the array is set to false. 
-bool keys [256];
+bool keys [SDLK_LAST];
 
 // Pointer to the player character.
 Character* mia;

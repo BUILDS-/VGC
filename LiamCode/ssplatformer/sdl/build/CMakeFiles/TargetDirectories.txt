@@ -1,0 +1,1 @@
+/home/mixal/Git/VGC/LiamCode/ssplatformer/sdl/build/CMakeFiles/main.dir

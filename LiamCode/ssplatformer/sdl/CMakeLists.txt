@@ -9,14 +9,14 @@ set(CMAKE_CPP_FLAGS -Wall)
 
 #These include the directories with the various GL files
 #WARNING, MAY NOT WORK FOR SYSTEMS OTHER THAN LINUX!
-include_directories(/usr/X11R6/include /usr/local/include)
-link_directories(/usr/X11R6/lib /usr/local/lib)
+#include_directories(/usr/X11R6/include /usr/local/include)
+#link_directories(/usr/X11R6/lib /usr/local/lib)
 
 #creates the executables and links the various cpp files together
 add_executable(main main.cpp level.cpp Character.cpp)
 
 #links the various openGL libraries to main.
-SET(EXTRA_LIBS GL X11 GLU glut)
+SET(EXTRA_LIBS SDL SDL_gfx)
 target_link_libraries(main ${EXTRA_LIBS})
 
 

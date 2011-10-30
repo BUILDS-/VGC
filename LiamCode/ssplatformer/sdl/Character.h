@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <limits.h>
 #include "types.h"
 #include "consts.h"
 

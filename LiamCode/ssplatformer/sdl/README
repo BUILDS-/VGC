@@ -47,25 +47,20 @@ going to be hard)
 
 Bugs to fix:
 
+The current method of just subtracting the screen height by every y value is not
+sustainable. Better to convert the core math.
+
 Also, collision detection only works with the main character. Find a way to
 make it work with the objects too. (so that two objects can collide).
 
 Does not land exactly at 40 pixels when jumping.
 
-Also, the code currently runs very slowly on Linux. Finding a fix for that if we
-want to work in openGL is a must.
-
 Formatting:
 
-Dont move every 15th frame. Make acceleration a double.
+Don't move every 15th frame. Make acceleration a double.
 
 frame overflow fix.
 
 STRUCTS FUCK YOOOOOOOOU (make a good constructor for them)
 
-CMake:
-The Libraries you include specify exact file paths and that's a no no.
-Macs and Windows don't use the same file system as Linux and this will cause
-problems.
-
-REMEMBER, OPENGL HAS THE ORIGIN AT THE LOWER LEFT OF THE SCREEN
+REMEMBER, SDL HAS THE ORIGIN AT THE UPPER LEFT OF THE SCREEN

@@ -23,20 +23,8 @@
  */
 
 
-#include "SDL/SDL.h"
-//#include <string>
-#include "SDL/SDL_gfxPrimitives.h"
 
-//The attributes of the screen                                                                                                                                                              
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-const int SCREEN_BPP = 32;
-
-//The surfaces that will be used                                                                                                                                                            
-SDL_Surface *hello = NULL;
-SDL_Surface *background = NULL;
-SDL_Surface *screen = NULL;
-
+//The attributes of the screen                                                                                                                     
 
 #include "main.h"
 
@@ -223,10 +211,10 @@ void drawObjects(void) {
     int obj_x = (level->getCharacter(i)->getLL()).x;
     int obj_y = (level->getCharacter(i)->getLL()).y;
 
-    rectangleRGBA(screen, ((Sint16) obj_x) - 1, 
-		  ((Sint16) obj_y) + obj->getHeight() + 1,
-		  ((Sint16) obj_x) + obj->getWidth() + 1, ((Sint16) obj_y) - 1,
-		  255, 255, 255, 1);		  
+    boxRGBA(screen, ((Sint16) obj_x) - 1, 
+			SCREEN_HEIGHT - (((Sint16) obj_y) + obj->getHeight() + 1),
+			((Sint16) obj_x) + obj->getWidth() + 1, SCREEN_HEIGHT - (((Sint16) obj_y) - 1),
+		  255, 255, 255, 255);		  
   }	
 }
 
@@ -259,14 +247,14 @@ void drawGrid(void) {
  void moveMia(void) {
    char direction = '\0';
    // Move up, right, left, down.
-   if (keys[100]) {
+   if (keys[SDLK_LEFT]) {
      direction = 'l';
      mia->moveLeft();
-   } else if (keys[101]) {
+   } else if (keys[SDLK_UP]) {
      //Nope
      //mia->moveUp();
      mia->slowX();
-  } else if (keys[102]) {
+  } else if (keys[SDLK_RIGHT]) {
      direction = 'r'; 
      mia->moveRight();
      
@@ -340,11 +328,13 @@ void display(void) {
   // Draws Mia.
   drawObjects();
   
-  //Update the screen                                                                                                                                                                       
-  if(SDL_Flip(screen) == -1) {
-    return 1;
-  }
+  //Update the screen
+  
 
+  if(SDL_Flip(screen) == -1) {
+    return;
+  }
+  boxRGBA(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0, 255);
 }
 
 /*// Given a height and a width, this function changes the OpenGL window size.
@@ -378,25 +368,25 @@ void idle(void)
 }
 */
 // If a normal key is pressed, this is called.
-void keyPressed (unsigned char key, int x, int y) {
+void keyPressed (int key, int x, int y) {
 	keys[key] = 1;
 }
 
 // If a key is released, this is called.
-void keyReleased (unsigned char key, int x, int y) {
+void keyReleased (int key, int x, int y) {
 	keys[key] = 0;
 }
 
 // If a special key is pressed (arrow keys), this is called.
 void keySpecial (int key, int x, int y) {
-	if (key >= 0 && key < 256) {
+	if (key >= 0 && key < SDLK_LAST) {
 		keys[key] = 1;
 	}
 }
 
 // If a spacial key is released (arrow keys), this is called.
 void keySReleased (int key, int x, int y) {
-	if (key >= 0 && key < 256) {
+	if (key >= 0 && key < SDLK_LAST) {
 		keys[key] = 0;
 	}
 	
@@ -407,7 +397,7 @@ void keySReleased (int key, int x, int y) {
 // things off a list before taking off.
 int main(int argc, char** argv)
 {
-        SDL_Event event;
+  SDL_Event event;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
 	  return 1;
@@ -419,6 +409,8 @@ int main(int argc, char** argv)
 	  return 1;
 	}
 
+
+
 	//Sets the widnow caption                                                                                                                                                                 
 	SDL_WM_SetCaption("VGC", NULL);
 	
@@ -426,7 +418,7 @@ int main(int argc, char** argv)
 	//int SDL_EnableUNICODE(1);
 	
 	// Where the keys are stored.
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < SDLK_LAST; i++) {
 		keys[i] = 0;
 	}
 	
@@ -434,20 +426,23 @@ int main(int argc, char** argv)
 	int running = 1;
 	while (running) {
 
-	    while(SDL_PollEvent(&event)) {
-	        int code = event.key.keysym.key;
-	        if (event.type == SDL_KEYUP) {
-	          keyReleased(code,0,0);
+	  while(SDL_PollEvent(&event)) {
+		int code = event.key.keysym.sym;
+		if (event.type == SDL_KEYUP) {
+
+		  keyReleased(code,0,0);
 		} else if (event.type == SDL_KEYDOWN) {
 		  keyPressed(code,0,0);
+		  if (code == SDLK_q) {
+			running = 0;
+		  }
 		}	    
-	    }
-	    display();
-	    
+	  }
+	  display();
 	}
-
-
-
+	
+	
+	
     return EXIT_SUCCESS;
 }
 
