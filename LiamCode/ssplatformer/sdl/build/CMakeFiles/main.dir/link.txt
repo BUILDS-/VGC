@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/level.cpp.o CMakeFiles/main.dir/Character.cpp.o  -o main -rdynamic -lSDL -lSDL_gfx 
