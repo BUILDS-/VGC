@@ -9,6 +9,7 @@
 #include <limits.h>
 #include "level.h"
 #include "SDL/SDL.h"
+#include "SDL/SDL_image.h"
 #include "SDL/SDL_gfxPrimitives.h"
 
 
@@ -19,10 +20,17 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 const int SCREEN_BPP = 32;
 
+const int LEVEL_WIDTH = 1280; 
+const int LEVEL_HEIGHT = 960;
+
+
+
+
 //The surfaces that will be used
 SDL_Surface *hello = NULL;
 SDL_Surface *background = NULL;
 SDL_Surface *screen = NULL;
+SDL_Surface *reload = NULL;
 
 
 // Keeps track of what frame number we are on.

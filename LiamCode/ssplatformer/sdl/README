@@ -57,9 +57,13 @@ Does not land exactly at 40 pixels when jumping.
 
 Formatting:
 
+Create a seperate function for each frame
+
 Don't move every 15th frame. Make acceleration a double.
 
 frame overflow fix.
+
+DON'T PUT INCLUDES IN THE HEADER. PUT THEM IN THE SOURCE FILE.
 
 STRUCTS FUCK YOOOOOOOOU (make a good constructor for them)
 

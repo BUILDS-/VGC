@@ -14,19 +14,13 @@
  * 0 to 1. When released, it goes back to 0.
  */
 
-/*
- * Compile with:
- * g++ -Wall -I. -I/usr/X11R6/include -I/opt/local/include
- * -L/opt/local/lib -L/usr/X11R6/lib -lglut -lglu -lgl -o main main.cpp
- * From site:
- * http://dirkraffel.com/2008/01/17/eclipse-cdt-on-mac-os-x/
- */
-
 
 
 //The attributes of the screen
 
 #include "main.h"
+
+SDL_Rect camera;
 
 // If b is in between a and c, return 1. Otherwise return 0.
 int isInBetween(int a, int b, int c) {
@@ -201,39 +195,60 @@ void gravity(void) {
   }
 }
 
+
+void setCamera(void) {
+  camera.x = ( mia->getLL().x + mia->getWidth() / 2 ) - SCREEN_WIDTH / 2; 
+  camera.y = ( mia->getLL().y + mia->getHeight() / 2 ) - SCREEN_HEIGHT / 2;
+  //Keep the camera in bounds. 
+  if( camera.x < 0 ) { 
+	camera.x = 0; 
+  }
+  
+  if( camera.y < 0 ) { 
+	camera.y = 0; 
+  } 
+  if( camera.x > LEVEL_WIDTH - camera.w ) { 
+	camera.x = LEVEL_WIDTH - camera.w; 
+  } 
+  if( camera.y > LEVEL_HEIGHT - camera.h ) { 
+	camera.y = LEVEL_HEIGHT - camera.h; 
+  } 
+
+
+
+}
+
+
 // Figures out what all the object coordinates are and draws them to the
 // screen.
 void drawObjects(void) {
   int end = level->getNumPeople();
   int i;
+
   for (i = 0; i < end; i++) {
     Character* obj = level->getCharacter(i);
     int obj_x = (level->getCharacter(i)->getLL()).x;
     int obj_y = (level->getCharacter(i)->getLL()).y;
-
-    boxRGBA(screen, ((Sint16) obj_x) - 1,
+    
+    boxRGBA(background, ((Sint16) obj_x) - 1,
 			SCREEN_HEIGHT - (((Sint16) obj_y) + obj->getHeight() + 1),
 			((Sint16) obj_x) + obj->getWidth() + 1, SCREEN_HEIGHT - (((Sint16) obj_y) - 1),
 			255, 255, 255, 255);
   }
+
+
+
 }
 
 // Draws the grid on the screen.
 void drawGrid(void) {
-  /* glPushMatrix();
-glBegin(GL_LINES);
-float i;
-for (i = 1.0f; i < 11.0f; i++) {
-glVertex2f((width/10.0f)*i, 0.0f);
-glVertex2f((width/10.0f)*i, height + 0.0f);
-glVertex2f(0.0f, (height/10.0f)*i);
-glVertex2f(width, (height/10.0f)*i);
-}
-
-glEnd( );
-
-glPopMatrix();
-  */
+  
+  int i;
+  for (i = 1; i < 11; i++) {
+	hlineColor(background, 0, SCREEN_WIDTH, (SCREEN_HEIGHT/10)*i, 0xFFFFFFFF);
+	vlineColor(screen, (SCREEN_WIDTH/10)*i, 0, SCREEN_HEIGHT, 0xFFFFFFFF);
+  }
+  
 }
 
 
@@ -292,6 +307,19 @@ void spawn_level(void) {
   level->addCharacter(block);
 }
 
+
+int apply_surface(int x, int y, SDL_Surface* source, SDL_Surface* destination, 
+				   SDL_Rect* clip = NULL) { 
+  //Holds offsets 
+  SDL_Rect offset; 
+  //Get offsets 
+  offset.x = x; 
+  offset.y = y; 
+  
+  //Blit 
+  return SDL_BlitSurface(source, clip, destination, &offset); 
+}
+
 /*
  * Where the main loop is. For (mostly) every frame this function is called.
  * Spawns the character and level if either hasn't been made yet. Reads input
@@ -314,7 +342,7 @@ void display(void) {
   // If player is pressing arrow key, move mia, then bring gravity
   // into effect. Only does it every 15th frame to keep from insanely
   // high acceleration.
-  if (frame % 15 == 0) {
+  if (frame % 2 == 0) {
     gravity();
     moveMia();
     int end = level->getNumPeople();
@@ -324,33 +352,47 @@ void display(void) {
     }
   }
   
-  // Draws Mia.
+   // Draws Mia.
   drawObjects();
   
-  //Update the screen
-  
+  setCamera();
 
+  apply_surface( 0, 0, background, screen, &camera );
+
+  //Update the screen
   if(SDL_Flip(screen) == -1) {
     return;
   }
-  boxRGBA(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0, 255);
+  if(SDL_Flip(background) == -1) {
+	return;
+  }
+  
+
+  //So we don't rape the cache.
+  SDL_FreeSurface(background);
+
+  //Clean the screen by loading the cached image of the background.
+  background = SDL_ConvertSurface(reload, reload->format, reload->flags);
+
+  //boxRGBA(screen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0, 255);
 }
 
-/*// Given a height and a width, this function changes the OpenGL window size.
+/*
+// Given a height and a width, this function changes the OpenGL window size.
 void reshape(int width, int height)
 {
-glViewport(0, 0, width, height);
+  glViewport(0, 0, width, height);
 // glMatrixMode tells OpenGL which of the matrices it
 // uses for projecting OpenGL coordinates onto pixels we want to modify
-glMatrixMode(GL_PROJECTION);
+  glMatrixMode(GL_PROJECTION);
 // Resets the whole matrix to the identity matrix
-glLoadIdentity();
+  glLoadIdentity();
 // Parameters in order: left, right, bottom and top.
 // Note that in opengl the 0,0 is in the bottom left
 // (like in most math) rather than top left (like in
 // most graphics)
-gluOrtho2D(0, width, 0, height);
-glMatrixMode(GL_MODELVIEW);
+  gluOrtho2D(0, width, 0, height);
+  glMatrixMode(GL_MODELVIEW);
 }
 
 
@@ -362,7 +404,46 @@ void idle(void)
 {
 glutPostRedisplay();
 }
+
 */
+SDL_Surface *load_image( std::string filename )
+{
+  //The image that's loaded                                                                         
+  SDL_Surface* loadedImage = NULL;
+
+  //The optimized surface that will be used                                                         
+  SDL_Surface* optimizedImage = NULL;
+
+  //Load the image                                                                                  
+  loadedImage = IMG_Load( filename.c_str() );
+  
+  //If the image loaded                                                                             
+  if( loadedImage != NULL )
+    {
+	  //Create an optimized surface                                                                 
+	  optimizedImage = SDL_DisplayFormat( loadedImage );
+	  
+	  //Free the old surface                                                                        
+	  SDL_FreeSurface( loadedImage );
+	  
+	  //If the surface was optimized                                                                
+	  if( optimizedImage != NULL )
+		{
+		  
+		  SDL_SetColorKey( optimizedImage, SDL_SRCCOLORKEY, 
+						   SDL_MapRGB( optimizedImage->format, 0, 0xFF, 0xFF ) );
+		  return optimizedImage;
+		}
+	} else {
+
+  }
+  //Return the optimized surface
+  return loadedImage;
+}
+
+  
+
+
 // If a normal key is pressed, this is called.
 void keyPressed (int key, int x, int y) {
   keys[key] = 1;
@@ -398,6 +479,22 @@ int main(int argc, char** argv)
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
 	return 1;
   }
+
+  //Will turn this into a function that loads the appropriate images
+  /*background = SDL_CreateRGBSurface(SDL_SWSURFACE ,SCREEN_WIDTH*2, 
+									SCREEN_HEIGHT*2, 32, rmask, gmask, bmask, 
+									amask);
+  */
+
+  background = IMG_Load("bg.png");
+  reload = IMG_Load("bg.png");
+  /*if (background == NULL) {
+	printf("aaaaaaaaaaaaaaaaah\n");
+	}*/
+  camera.x = 0;
+  camera.y = 0;
+  camera.w = SCREEN_WIDTH;
+  camera.h = SCREEN_HEIGHT;
 
   //Creates screen
   screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
